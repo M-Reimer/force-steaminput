@@ -13,6 +13,8 @@ My helper tool is meant to help with SDL games that ignore the Steam setting of 
 - Right click the game in your Steam inventory and choose "Properties" from the context menu
 - Enter the full path to "force-steaminput" to the "game launch options" followed by one "space character" and `%command%`
 
+![Screenshot](game-properties.png)
+
 # Usage
 
 - Make sure your game controller is connected and properly recognized by the system
