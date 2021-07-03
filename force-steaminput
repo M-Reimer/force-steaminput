@@ -1,0 +1,35 @@
+#!/usr/bin/bash
+#    force-steaminput - A helper to force SDL games to use Steam Input
+#    https://github.com/M-Reimer/force-steaminput
+#    Copyright (C) 2021 Manuel Reimer <manuel.reimer@gmx.de>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# This is the VID:PID combination used by Valve for Steam Input
+VALVE_GAMEPAD=28de:11ff
+
+# Walk over all possible input devices and get their VID and PID
+for event in /sys/class/input/event*; do
+  read vid < "$event/device/id/vendor"
+  read pid < "$event/device/id/product"
+
+  # If we found the Steam Input gamepad, then export the corresponding device
+  # as SDL_JOYSTICK_DEVICE and launch the game
+  if [ "$vid:$pid" = "$VALVE_GAMEPAD" ]; then
+    export SDL_JOYSTICK_DEVICE="/dev/input/${event##*/}"
+  fi
+done
+
+# Finally execute whatever Steam passed to us
+exec "$@"
